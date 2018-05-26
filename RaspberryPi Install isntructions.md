@@ -1,6 +1,15 @@
-### install pocketsphinx via apt
+## Prototype
 
-sudo apt install 
+The prototype works like this:
+* record 3s while listening to a story
+* parse this file through pocketsphinx
+* read the resulting text file
+* repeat
+
+## Generate Language Models
+
+Go here: http://www.speech.cs.cmu.edu/tools/lmtool-new.html
+Upload your language model text file.
 
 
 
@@ -9,11 +18,13 @@ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 
-## Node pocketshpinx module
+## install pocketsphinx
 
 sudo apt install pocketsphinx libpocketsphinx-dev libsphinxbase-dev cmake pocketsphinx-en-us
-sudo npm install -g cmake-js
-sudo npm install pocketsphinx
+
+//sudo npm install -g cmake-js
+
+//sudo npm install pocketsphinx
 
 
 
@@ -31,6 +42,8 @@ pocketsphinx_continuous -adcdev plughw:1,0 -inmic yes -lm 0916.lm -dict 0916.dic
 
 
 ## socat to unbuffer
+
+
 
 sudi apt install socat
 
