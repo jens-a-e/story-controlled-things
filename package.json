@@ -9,8 +9,5 @@
     "listen:colours": "pocketsphinx_continuous -adcdev plughw:1,0 -inmic yes -lm 0916.lm -dict 0916.dic -kws_delay 1 2>/dev/null"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "pocketsphinx-continuous": "^1.1.0"
-  }
+  "license": "ISC"
 }

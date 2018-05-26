@@ -17,15 +17,17 @@
 //   }
 // });
 
+const targetID = process.argv[2];
+
 /// Record, parse, readin, repeat
 function listen(loop = null) {
-  console.error("Listeing...")
+  console.error(`Listening to '${targetID}'`);
   const { execSync } = require('child_process');
   const { readFileSync } = require('fs');
   execSync('arecord --duration 3 -f s16_LE -r 16000 buffer.wav 2>/dev/null');
-  execSync('pocketsphinx_continuous -infile buffer.wav -lm 0916.lm -dict 0916.dic 2>/dev/null > buffer.txt');
-  const result = readFileSync('buffer.txt');
-  console.log("Understood:", result.toString());
+  execSync(`pocketsphinx_continuous -infile buffer.wav -lm ${targetID}.lm -dict ${targetID}.dic 2>/dev/null > buffer.txt`);
+  const result = readFileSync('buffer.txt').toString().trim();
+  console.log(`Understood: '${result}'`);
   if (loop) listen(loop);
 }
 
