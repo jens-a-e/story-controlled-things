@@ -36,6 +36,8 @@ class StoryColorSwitch extends Thing {
   }
 }
 
+module.exports = {StoryColorSwitch};
+
 function runServer() {
   const sensor = new StoryColorSwitch();
 

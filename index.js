@@ -1,38 +1,52 @@
-/// Spawning
-// const { spawn } = require('child_process');
-// pocketsphinx_continuous -inmic yes -samprate 44100 -nfft 2048 -lm 6914.lm -dict 6914.dic
-// const ps = spawn('pocketsphinx_continuous', ['-inmic', 'yes', '-samprate', 44100, '-nfft', 2048, '-lm', '6914.lm', '-dict', '6914.dic']);
-
-// var readline = require('readline');
-// var rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-//   terminal: false
-// });
-
-// rl.on('line', function(line){
-//   console.error("RAW Line", line);
-//   if (line !== "Listening..." && line !== "READY....") {
-//     console.log("Got", line);
-//   }
-// });
+const {
+  SingleThing,
+  WebThingServer
+} = require('webthing');
+const {StoryColorSwitch} = require('./things')
 
 const targetID = process.argv[2];
 
+const { promisify } = require('util');
+  const { exec: _exec } = require('child_process');
+  const { readFile: _readFile } = require('fs');
+
+const exec = promisify(_exec);
+const readFile = promisify(_readFile);
+
 /// Record, parse, readin, repeat
-function listen(loop = null) {
+async function listen(handler = null) {
   console.error(`Listening to '${targetID}'`);
-  const { execSync } = require('child_process');
-  const { readFileSync } = require('fs');
-  execSync('arecord --duration 3 -f s16_LE -r 16000 buffer.wav 2>/dev/null');
-  execSync(`pocketsphinx_continuous -infile buffer.wav -lm ${targetID}.lm -dict ${targetID}.dic 2>/dev/null > buffer.txt`);
-  const result = readFileSync('buffer.txt').toString().trim();
+  await exec('arecord --duration 3 -f s16_LE -r 16000 buffer.wav 2>/dev/null');
+  // console.err("recorded", proc);
+  await exec(`pocketsphinx_continuous -infile buffer.wav -lm ${targetID}.lm -dict ${targetID}.dic 2>/dev/null > buffer.txt`);
+  // console.err("understood", proc);
+  const result = (await readFile('buffer.txt')).toString().trim();
   console.log(`Understood: '${result}'`);
-  if (loop) listen(loop);
+  if (handler) await handler(result);
+  return result;
 }
 
-function run() {
-  listen(true); // start endless loop
+async function run() {
+  const sensor = new StoryColorSwitch();
+  const server = new WebThingServer(new SingleThing(sensor), 8887);
+  process.on('SIGINT', () => {
+    server.stop();
+    process.exit();
+  });
+
+  server.start();
+
+  // start endless loop
+  while(true) {
+    await listen(async function(hearhear) {
+      console.log("I heard", hearhear);
+      sensor.color = parseInt(100.0 * Math.random());
+    }); 
+  }
 }
 
-run();
+try {
+  run();
+} catch(err) {
+  console.error(err);
+}
