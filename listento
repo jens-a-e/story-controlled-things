@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+pocketsphinx_continuous -adcdev plughw:1,0 -inmic yes -lm 6914.lm -dict 6914.dic -kws_delay 1 2>/dev/null

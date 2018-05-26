@@ -4,7 +4,8 @@
   "description": "Story controlled things",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "listen:colours": "pocketsphinx_continuous -adcdev plughw:1,0 -inmic yes -lm 0916.lm -dict 0916.dic -kws_delay 1 2>/dev/null"
   },
   "author": "",
   "license": "ISC",
