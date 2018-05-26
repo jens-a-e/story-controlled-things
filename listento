@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-pocketsphinx_continuous -adcdev plughw:1,0 -inmic yes -lm 6914.lm -dict 6914.dic -kws_delay 1 2>/dev/null
+# pocketsphinx_continuous -adcdev plughw:1,0 -inmic yes -samprate 44100 -nfft 2048 -lm 0916.lm -dict 0916.dic 2>/dev/null
+pocketsphinx_continuous -inmic yes -lm 0916.lm -dict 0916.dic 2>/dev/null
